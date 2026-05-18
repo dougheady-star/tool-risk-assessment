@@ -47,7 +47,6 @@ body {
   margin-bottom: 0.25rem;
 }
 
-/* Hard page margin control (removes the “mystery” top whitespace) */
 @page {
   margin: 0.25in;
 }
@@ -63,19 +62,16 @@ body {
     print-color-adjust: exact;
   }
 
-  /* Only print the report area cleanly */
   #print-area {
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  /* Kill Tailwind container constraints in print (prevents odd centering + whitespace) */
   .max-w-6xl {
     max-width: none !important;
     width: 100% !important;
   }
 
-  /* Remove the big Tailwind padding used on screen */
   .px-6 {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -85,7 +81,6 @@ body {
     padding-bottom: 0 !important;
   }
 
-  /* Collapse Tailwind vertical spacing utilities inside the print area */
   #print-area > * {
     margin-top: 10px !important;
   }
@@ -93,7 +88,6 @@ body {
     margin-top: 0 !important;
   }
 
-  /* Remove shadows/rounding (print should look like a report) */
   .shadow-lg {
     box-shadow: none !important;
   }
@@ -101,13 +95,11 @@ body {
     border-radius: 0 !important;
   }
 
-  /* Hide interactive elements on print */
   .print-hide,
   button {
     display: none !important;
   }
 
-  /* Keep the blue header bar but remove extra spacing around it */
   .bg-gradient-to-r {
     margin: 0 !important;
     padding: 14px 16px !important;
@@ -117,7 +109,6 @@ body {
     print-color-adjust: exact;
   }
 
-  /* Make summary cards not waste vertical space */
   #print-area .grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -141,27 +132,22 @@ body {
     padding: 6px 7px !important;
     text-align: left !important;
     vertical-align: top !important;
-
-    /* Prevent “ImpactInherent” / overlap issues */
     overflow: hidden !important;
     text-overflow: clip !important;
   }
 
-  /* Headers never wrap (prevents “Impact” splitting) */
   #print-area th {
     font-weight: 700 !important;
     background: #f3f4f6 !important;
     white-space: nowrap !important;
   }
 
-  /* Normal word wrapping in body cells */
   #print-area td {
     word-break: normal !important;
     overflow-wrap: normal !important;
     white-space: normal !important;
   }
 
-  /* FIXED COLUMN WIDTHS IN PRINT (the actual collision fix) */
   #print-area th:nth-child(1),
   #print-area td:nth-child(1) {
     width: 26% !important; /* Threat */
@@ -201,7 +187,6 @@ body {
     width: 20% !important; /* Mitigation */
   }
 
-  /* Keep number + badge inline (stops “High” wrapping) */
   #print-area td div {
     display: inline-flex !important;
     align-items: center !important;
@@ -210,14 +195,12 @@ body {
     white-space: nowrap !important;
   }
 
-  /* Print-only badge shrink (stops badge forcing wraps) */
   #print-area span.inline-flex {
     font-size: 8pt !important;
     padding: 1px 6px !important;
     line-height: 1.2 !important;
   }
 
-  /* Prevent rows splitting mid-row on new pages */
   #print-area tr {
     page-break-inside: avoid !important;
   }
