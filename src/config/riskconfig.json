@@ -1,8 +1,8 @@
 {
   "Meta": {
     "AppName": "Risk Assessment Wizard",
-    "ConfigVersion": "1.0",
-    "LastUpdated": "2026-03-20"
+    "ConfigVersion": "2.7",
+    "LastUpdated": "05-18-2026"
   },
   "Lists": {
     "ToolCategory": [
