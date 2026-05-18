@@ -1,0 +1,138 @@
+[
+  {
+    "id": "unauthorized-access",
+    "Threat": "Unauthorized access",
+    "Applies": ["SaaS","Installed","Agent","Admin Tool","Browser Extension","Script/Utility","Other"],
+    "defaultProbability": "Medium",
+    "defaultImpact": "High",
+    "controlSensitivity": "High",
+    "explanationProfile": "Access",
+    "MitreTactics": ["Initial Access"],
+    "Mitigation": "Enforce strong authentication (SSO/MFA) and least privilege."
+  },
+  {
+    "id": "credential-attacks",
+    "Threat": "Credential attacks (brute force / stuffing)",
+    "Applies": ["SaaS","Browser Extension","Admin Tool"],
+    "includeWhen": [
+      { "field": "InternetFacing", "op": "Equals", "value": "Yes" }
+    ],
+    "defaultProbability": "High",
+    "defaultImpact": "Medium",
+    "controlSensitivity": "High",
+    "explanationProfile": "Access",
+    "MitreTactics": ["Credential Access"],
+    "Mitigation": "Enable MFA, conditional access, and monitor authentication logs."
+  },
+  {
+    "id": "vulnerability-exploitation",
+    "Threat": "Vulnerability exploitation",
+    "Applies": ["SaaS","Installed","Agent","Admin Tool","Browser Extension"],
+    "includeWhen": [
+      { "field": "UpdateCadence", "op": "In", "value": ["Manual","Unknown"] }
+    ],
+    "defaultProbability": "Medium",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "Execution",
+    "MitreTactics": ["Execution","Privilege Escalation"],
+    "Mitigation": "Establish patching cadence; vulnerability scanning; monitor advisories."
+  },
+  {
+    "id": "data-leakage-exfiltration",
+    "Threat": "Data leakage / exfiltration",
+    "Applies": ["SaaS","Installed","Agent","Browser Extension"],
+    "includeWhen": [
+      { "field": "DataSensitivity", "op": "In", "value": ["Internal","GLBA"] }
+    ],
+    "defaultProbability": "Medium",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "Data",
+    "MitreTactics": ["Collection","Exfiltration"],
+    "Mitigation": "Limit data access; apply DLP where applicable; monitor outbound transfers."
+  },
+  {
+    "id": "privilege-escalation",
+    "Threat": "Privilege escalation / admin misuse",
+    "Applies": ["Admin Tool","Installed","Agent"],
+    "includeWhen": [
+      { "field": "PrivilegeLevel", "op": "In", "value": ["Admin","Service Account"] }
+    ],
+    "defaultProbability": "Medium",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "Access",
+    "MitreTactics": ["Privilege Escalation"],
+    "Mitigation": "Separate admin accounts; RBAC; audit privileged actions."
+  },
+  {
+    "id": "malware-execution",
+    "Threat": "Malware execution or unauthorized code execution",
+    "Applies": ["Installed","Agent","Admin Tool"],
+    "defaultProbability": "Medium",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "Execution",
+    "MitreTactics": ["Execution"],
+    "Mitigation": "Application control, EDR, patch management, and restricted execution rights."
+  },
+  {
+    "id": "lateral-movement",
+    "Threat": "Lateral movement within the environment",
+    "Applies": ["Installed","Agent","Admin Tool"],
+    "defaultProbability": "Low",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "LateralMovement",
+    "MitreTactics": ["Lateral Movement"],
+    "Mitigation": "Network segmentation; restrict credential reuse; monitor east-west traffic."
+  },
+  {
+    "id": "discovery",
+    "Threat": "Unauthorized discovery of systems or data",
+    "Applies": ["SaaS","Installed","Agent"],
+    "defaultProbability": "Low",
+    "defaultImpact": "Medium",
+    "controlSensitivity": "Low",
+    "explanationProfile": "Discovery",
+    "MitreTactics": ["Discovery"],
+    "Mitigation": "Restrict metadata exposure and monitor enumeration activity."
+  },
+  {
+    "id": "availability-loss",
+    "Threat": "Service disruption or availability loss",
+    "Applies": ["SaaS","Installed","Agent"],
+    "defaultProbability": "Low",
+    "defaultImpact": "High",
+    "controlSensitivity": "Medium",
+    "explanationProfile": "Availability",
+    "MitreTactics": ["Impact"],
+    "Mitigation": "Monitoring/alerting; redundancy; SLAs; DR/BCP planning and testing."
+  },
+  {
+    "id": "supply-chain",
+    "Threat": "Supply chain compromise",
+    "Applies": ["Installed","Agent","Browser Extension"],
+    "defaultProbability": "Low",
+    "defaultImpact": "High",
+    "controlSensitivity": "Low",
+    "explanationProfile": "SupplyChain",
+    "MitreTactics": ["Initial Access","Execution"],
+    "Mitigation": "Assess vendor security posture and validate update mechanisms."
+  },
+  {
+    "id": "logging-gaps",
+    "Threat": "Inadequate logging / non-repudiation",
+    "Applies": ["SaaS","Installed","Admin Tool","Browser Extension"],
+    "includeWhen": [
+      { "field": "Logging", "op": "Equals", "value": "None" }
+    ],
+    "defaultProbability": "Medium",
+    "defaultImpact": "Medium",
+    "controlSensitivity": "High",
+    "explanationProfile": "Logging",
+    "MitreTactics": ["Defense Evasion"],
+    "Mitigation": "Enable audit logging; centralize logs; define retention."
+  }
+]

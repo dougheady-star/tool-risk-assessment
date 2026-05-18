@@ -1,0 +1,116 @@
+{
+  "Probability": {
+    "Base": 2.0,
+    "InternetFacingYes": 0.8,
+
+    "Integrations": {
+      "None": 0.0,
+      "Limited": 0.2,
+      "Extensive": 0.5
+    },
+
+    "AuthMethod": {
+      "None": 0.5,
+      "Local": 0.5,
+      "AD": 0.0,
+      "SSO": 0.0
+    },
+
+    "UpdateCadence": {
+      "Automatic": -0.1,
+      "Manual": 0.15,
+      "Unknown": 0.3
+    },
+
+    "ToolCategory": {
+      "Browser Extension": 0.3,
+      "Admin Tool": 0.2,
+      "Agent": 0.1,
+      "Installed": 0.0,
+      "SaaS": 0.0,
+      "Script/Utility": 0.0,
+      "Other": 0.0
+    },
+
+    "PrivilegeLevel": {
+      "User": 0.0,
+      "Admin": 0.2,
+      "Service Account": 0.2
+    },
+
+    "Step3": {
+      "VulnerabilityScanning": -0.1,
+      "ChangeControlRequired": -0.1,
+      "MonitoringAlerting": -0.1,
+      "CentralLogForwarding": -0.1,
+      "AuditLoggingEnabled": -0.1,
+
+      "EncryptionInTransit": -0.05,
+      "RbacImplemented": -0.05,
+      "LeastPrivilegeEnforced": -0.05,
+
+      "SiemInPlace": -0.05,
+      "Soc24x7Monitoring": -0.05,
+
+      "InternetFacing_NoEncTransitPenalty": 0.2,
+      "CapMin": -0.35
+    }
+  },
+
+  "Control": {
+    "Baseline": {
+      "Default": "Needs Attention",
+
+      "AuthMethod": {
+        "SSO": "Satisfactory",
+        "AD": "Satisfactory",
+        "None": "Needs Attention",
+        "Local": "Needs Attention"
+      }
+    },
+
+    "Logging": {
+      "None": "Needs Attention",
+      "Basic": null,
+      "Full": "UP"
+    },
+
+    "UpdateCadence": {
+      "Automatic": "UP",
+      "Manual": null,
+      "Unknown": "DOWN"
+    },
+
+    "MfaBoost": {
+      "Enabled": true,
+      "WhenAuthIs": ["SSO", "AD", "Local"],
+      "Boost": "UP"
+    },
+
+    "Step3Boost": {
+      "Enabled": true,
+      "BoostEveryNCheckedControls": 3,
+
+      "Keys": [
+        "RbacImplemented",
+        "LeastPrivilegeEnforced",
+        "AdminAccountsSeparated",
+        "AuditLoggingEnabled",
+        "CentralLogForwarding",
+        "MonitoringAlerting",
+        "SiemInPlace",
+        "Soc24x7Monitoring",
+        "VulnerabilityScanning",
+        "ChangeControlRequired",
+        "EncryptionInTransit",
+        "EncryptionAtRest",
+        "BackupsEnabled"
+      ]
+    },
+
+    "SanityCaps": {
+      "InternetFacing_NoEncTransit_CapStrongToSatisfactory": true,
+      "NoStep3Controls_DefaultToNeedsAttention": true
+    }
+  }
+}

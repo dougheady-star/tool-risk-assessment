@@ -1,0 +1,259 @@
+{
+  "Meta": {
+    "AppName": "Risk Assessment Wizard",
+    "ConfigVersion": "1.0",
+    "LastUpdated": "2026-03-20"
+  },
+  "Lists": {
+    "ToolCategory": [
+      "Admin Tool",
+      "Agent",
+      "Browser Extension",
+      "Installed",
+      "Other",
+      "SaaS",
+      "Script/Utility"
+    ],
+    "BusinessCriticality": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "InternetFacing": [
+      "Yes",
+      "No"
+    ],
+    "DataSensitivity": [
+      "None",
+      "Internal",
+      "GLBA"
+    ],
+    "AuthMethod": [
+      "None",
+      "Local",
+      "AD",
+      "SSO"
+    ],
+    "PrivilegeLevel": [
+      "User",
+      "Admin",
+      "Service Account"
+    ],
+    "Integrations": [
+      "None",
+      "Limited",
+      "Extensive"
+    ],
+    "Logging": [
+      "None",
+      "Basic",
+      "Full"
+    ],
+    "UpdateCadence": [
+      "Automatic",
+      "Manual",
+      "Unknown"
+    ],
+    "Probability": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "Impact": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "ControlledRiskRating": [
+      "Needs Attention",
+      "Fair",
+      "Satisfactory",
+      "Strong"
+    ]
+  },
+  "Rules": {
+    "Defaults": {
+      "Probability": "Medium",
+      "Impact": "Medium",
+      "ControlledRiskRating": "Fair"
+    },
+    "Operators": [
+      "Equals",
+      "NotEquals",
+      "In",
+      "NotIn"
+    ],
+    "Thresholds": {
+      "OverallRisk": {
+        "LowMaxExclusive": 3.1,
+        "MediumMaxExclusive": 6.1
+      }
+    },
+    "OverallRows": {
+      "Enabled": true,
+      "ThreatLabels": {
+        "OverallInherent": "Overall Inherent Risk",
+        "OverallResidual": "Overall Residual Risk"
+      }
+    }
+  },
+  "ThreatLibrary": [
+    {
+      "Threat": "Unauthorized access",
+      "Applies": [
+        "SaaS",
+        "Installed",
+        "Agent",
+        "Admin Tool",
+        "Browser Extension",
+        "Script/Utility",
+        "Other"
+      ],
+      "Mitigation": "Enforce strong authentication (SSO/MFA where possible) and least privilege.",
+      "RecommendedWhen": {
+        "AnyOf": [
+          {
+            "Field": "AuthMethod",
+            "Op": "In",
+            "Value": [
+              "None",
+              "Local"
+            ]
+          },
+          {
+            "Field": "MfaUsed",
+            "Op": "Equals",
+            "Value": "No"
+          },
+          {
+            "Field": "PrivilegeLevel",
+            "Op": "In",
+            "Value": [
+              "Admin",
+              "Service Account"
+            ]
+          }
+        ]
+      },
+      "Defaults": {
+        "Probability": "Medium",
+        "Impact": "High",
+        "ControlledRiskRating": "Satisfactory"
+      }
+    },
+    {
+      "Threat": "Credential attacks (brute force / stuffing)",
+      "Applies": [
+        "SaaS",
+        "Browser Extension",
+        "Admin Tool"
+      ],
+      "Mitigation": "Enable MFA/Conditional Access and monitor authentication logs.",
+      "RecommendedWhen": {
+        "AllOf": [
+          {
+            "Field": "InternetFacing",
+            "Op": "Equals",
+            "Value": "Yes"
+          }
+        ]
+      },
+      "Defaults": {
+        "Probability": "High",
+        "Impact": "Medium",
+        "ControlledRiskRating": "Fair"
+      }
+    },
+    {
+      "Threat": "Vulnerability exploitation",
+      "Applies": [
+        "SaaS",
+        "Installed",
+        "Agent",
+        "Admin Tool",
+        "Browser Extension"
+      ],
+      "Mitigation": "Establish patching cadence; enable automatic updates; track versions.",
+      "RecommendedWhen": {
+        "AnyOf": [
+          {
+            "Field": "UpdateCadence",
+            "Op": "In",
+            "Value": [
+              "Manual",
+              "Unknown"
+            ]
+          },
+          {
+            "Field": "VulnerabilityScanning",
+            "Op": "Equals",
+            "Value": "No"
+          }
+        ]
+      },
+      "Defaults": {
+        "Probability": "Medium",
+        "Impact": "High",
+        "ControlledRiskRating": "Fair"
+      }
+    },
+    {
+      "Threat": "Data leakage / exfiltration",
+      "Applies": [
+        "SaaS",
+        "Installed",
+        "Agent",
+        "Browser Extension"
+      ],
+      "Mitigation": "Limit data access; apply DLP where applicable; log access; encrypt sensitive exports.",
+      "RecommendedWhen": {
+        "AnyOf": [
+          {
+            "Field": "DataSensitivity",
+            "Op": "Equals",
+            "Value": "GLBA"
+          },
+          {
+            "Field": "Integrations",
+            "Op": "Equals",
+            "Value": "Extensive"
+          }
+        ]
+      },
+      "Defaults": {
+        "Probability": "Medium",
+        "Impact": "High",
+        "ControlledRiskRating": "Satisfactory"
+      }
+    },
+    {
+      "Threat": "Inadequate logging / non-repudiation",
+      "Applies": [
+        "SaaS",
+        "Installed",
+        "Admin Tool",
+        "Browser Extension"
+      ],
+      "Mitigation": "Enable audit logging; centralize logs; define retention.",
+      "RecommendedWhen": {
+        "AnyOf": [
+          {
+            "Field": "Logging",
+            "Op": "Equals",
+            "Value": "None"
+          },
+          {
+            "Field": "AuditLoggingEnabled",
+            "Op": "Equals",
+            "Value": "No"
+          }
+        ]
+      },
+      "Defaults": {
+        "Probability": "Medium",
+        "Impact": "Medium",
+        "ControlledRiskRating": "Needs Attention"
+      }
+    }
+  ]
+}
