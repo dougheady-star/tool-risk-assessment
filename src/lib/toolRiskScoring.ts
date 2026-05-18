@@ -271,7 +271,6 @@ function buildWhy(
       summary =
         "Controls can reduce likelihood, but sensitive data exposure remains the primary driver of risk.";
       if (ctx.DataSensitivity !== "GLBA") {
-        // if not GLBA, keep it meaningful
         drivers.push("Business data exposure risk");
       }
       break;
