@@ -6,7 +6,6 @@ export type Rating = "Low" | "Medium" | "High";
 export type ControlRating = "Needs Attention" | "Fair" | "Satisfactory" | "Strong";
 export type ControlSensitivity = "High" | "Medium" | "Low";
 
-// NEW: threat-aware explanation categories
 export type ExplanationProfile =
   | "Access"
   | "Data"
@@ -40,7 +39,6 @@ export type ThreatRow = {
   Mitigation: string;
   MitreTactics?: string[];
 
-  // simplified, threat-aware "Why?"
   _why?: WhyInfo;
 };
 
@@ -60,7 +58,6 @@ const W: any = weights;
 const RC: any = riskconfig;
 const TL: any[] = threatLibrary as any[];
 
-// Always return a number (prevents "+= object" errors)
 function getNum(path: string, def = 0): number {
   const parts = path.split(".");
   let cur: any = W;
@@ -71,7 +68,6 @@ function getNum(path: string, def = 0): number {
   return typeof cur === "number" ? cur : def;
 }
 
-// Return any (strings like "UP", objects, arrays)
 function getAny(path: string, def: any = null): any {
   const parts = path.split(".");
   let cur: any = W;
@@ -88,21 +84,18 @@ function clampNum(v: number, min = 1, max = 3) {
   return v;
 }
 
-// 1..3 -> Low/Medium/High (PS-like)
 function toRating13(v: number): Rating {
   if (v <= 1.49) return "Low";
   if (v <= 2.49) return "Medium";
   return "High";
 }
 
-// Low/Medium/High -> 1/2/3
 function ratingToCalc(r: Rating): 1 | 2 | 3 {
   if (r === "Low") return 1;
   if (r === "Medium") return 2;
   return 3;
 }
 
-// 1..9 thresholds from riskconfig.json
 function scoreToOverallRating(v: number): Rating {
   const lowMax = Number(RC?.Rules?.Thresholds?.OverallRisk?.LowMaxExclusive ?? 3.1);
   const medMax = Number(RC?.Rules?.Thresholds?.OverallRisk?.MediumMaxExclusive ?? 6.1);
@@ -134,7 +127,6 @@ function controlDown(r: ControlRating): ControlRating {
   }
 }
 
-// Spreadsheet control factors
 function controlFactorBase(c: ControlRating): number {
   switch (c) {
     case "Needs Attention": return 0.2;
@@ -144,7 +136,6 @@ function controlFactorBase(c: ControlRating): number {
   }
 }
 
-// Threat-specific control effectiveness scaling
 function sensitivityMultiplier(s: ControlSensitivity): number {
   switch (s) {
     case "High": return 1.0;
@@ -153,7 +144,6 @@ function sensitivityMultiplier(s: ControlSensitivity): number {
   }
 }
 
-// includeWhen evaluator
 function matchesIncludeWhen(ctx: any, rules?: any[]): boolean {
   if (!rules || rules.length === 0) return true;
 
@@ -245,13 +235,13 @@ function buildWhy(
   const helping: string[] = [];
   const drivers: string[] = [];
 
-  // Common drivers
+  // Drivers
   if (ctx.DataSensitivity === "GLBA") drivers.push("Sensitive GLBA-regulated data");
   if (ctx.InternetFacing === "Yes") drivers.push("Internet-facing exposure");
   if (ctx.Integrations === "Extensive") drivers.push("Extensive third-party integrations");
   if (ctx.UpdateCadence === "Unknown") drivers.push("Unknown patch/update cadence");
 
-  // Common helping controls
+  // Helping controls
   if (ctx.AuthMethod === "SSO") helping.push("Single sign-on authentication");
   if (ctx.MfaUsed === "Yes") helping.push("Multi-factor authentication");
   if (ctx.RbacImplemented === "Yes") helping.push("Role-based access control");
@@ -264,7 +254,6 @@ function buildWhy(
   if (ctx.CentralLogForwarding === "Yes") helping.push("Central log forwarding");
   if (ctx.VulnerabilityScanning === "Yes") helping.push("Vulnerability scanning");
 
-  // Profile-specific tuning so explanations differ by threat
   let summary = "Controls reduce risk, but some exposure remains.";
 
   switch (profile) {
@@ -290,9 +279,7 @@ function buildWhy(
     case "SupplyChain":
       summary =
         "Internal controls have limited ability to prevent or detect vendor or supply chain compromise.";
-      // make this stand out
       drivers.push("Reliance on vendor security and update processes");
-      // reduce noise: access controls are less relevant
       break;
 
     case "Discovery":
@@ -331,12 +318,10 @@ function buildWhy(
       summary = "Controls reduce risk, but some exposure remains.";
   }
 
-  // sensitivity callout (makes it different by threat even with same controls)
   if (sens === "Low") {
     drivers.push("Controls have limited effectiveness for this threat type");
   }
 
-  // Trim a bit so it doesn’t read like a novel
   const helpingFactors = [...new Set(helping)].slice(0, 6);
   const remainingDrivers = [...new Set(drivers)].slice(0, 6);
 
@@ -344,9 +329,7 @@ function buildWhy(
 }
 
 export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
-  // ----------------------------
-  // Context Probability (weights.json; PS-aligned) [1](https://notredamefcu-my.sharepoint.com/personal/dheady_notredamefcu_com/Documents/Scripts/ToolRiskWizard/Config/weights.json?web=1)
-  // ----------------------------
+
   let p = getNum("Probability.Base", 2.0);
 
   if (ctx.InternetFacing === "Yes") {
@@ -389,9 +372,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
   p = clampNum(p + probDelta, 1, 3);
   const contextProbRating = toRating13(p);
 
-  // ----------------------------
-  // Context Impact (PS-aligned)
-  // ----------------------------
   let i = 2.0;
   switch (ctx.DataSensitivity) {
     case "None": i = 1.0; break;
@@ -406,9 +386,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
   i = clampNum(i, 1, 3);
   const contextImpactRating = toRating13(i);
 
-  // ----------------------------
-  // Context Control Rating (weights.json; PS-aligned) [1](https://notredamefcu-my.sharepoint.com/personal/dheady_notredamefcu_com/Documents/Scripts/ToolRiskWizard/Config/weights.json?web=1)
-  // ----------------------------
   let control = String(getAny("Control.Baseline.Default", "Fair")) as ControlRating;
 
   const authBase = getAny(`Control.Baseline.AuthMethod.${ctx.AuthMethod}`, null);
@@ -431,7 +408,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
     else if (boost === "DOWN") control = controlDown(control);
   }
 
-  // Strong requires >= 5 controls (your chosen policy)
   const boostEnabled = Boolean(getAny("Control.Step3Boost.Enabled", true));
   if (boostEnabled) {
     const keys = (getAny("Control.Step3Boost.Keys", []) as any[]) ?? [];
@@ -451,9 +427,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
     if (control === "Strong") control = "Satisfactory";
   }
 
-  // ----------------------------
-  // Threat selection
-  // ----------------------------
   const toolCategory = String(ctx.ToolCategory ?? "Other");
 
   const applicableThreats = TL
@@ -473,9 +446,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
         explanationProfile: "Access"
       }];
 
-  // ----------------------------
-  // Per-row scoring + simplified, threat-aware Why
-  // ----------------------------
   const rows: ThreatRow[] = safeThreats.map((t: any) => {
     const defP = asRating(t.defaultProbability, contextProbRating);
     const defI = asRating(t.defaultImpact, contextImpactRating);
@@ -490,7 +460,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
 
     const residual = Number((inherent - inherent * effFactor).toFixed(1));
 
-    // new threat-aware explanation
     const profile = deriveProfile(t);
     const why = buildWhy(profile, ctx, control, sens, toolCategory);
 
@@ -509,7 +478,6 @@ export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
     };
   });
 
-  // Overall: average across threats
   const avgInherent = rows.reduce((s, r) => s + r.InherentRiskCalc, 0) / rows.length;
   const avgResidual = rows.reduce((s, r) => s + r.ResidualRiskCalc, 0) / rows.length;
 
