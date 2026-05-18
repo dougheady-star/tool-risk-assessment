@@ -56,9 +56,6 @@ export type ToolRiskScore = {
   Rows: ThreatRow[];
 };
 
-/* =========================
-   Safe accessors (fix TS errors)
-   ========================= */
 const W: any = weights;
 const RC: any = riskconfig;
 const TL: any[] = threatLibrary as any[];
@@ -85,9 +82,6 @@ function getAny(path: string, def: any = null): any {
   return cur ?? def;
 }
 
-/* =========================
-   Core helpers
-   ========================= */
 function clampNum(v: number, min = 1, max = 3) {
   if (v < min) return min;
   if (v > max) return max;
@@ -181,9 +175,6 @@ function matchesIncludeWhen(ctx: any, rules?: any[]): boolean {
   });
 }
 
-/* =========================
-   JSON -> union guards (fix TS2345 errors)
-   ========================= */
 function asRating(x: any, fallback: Rating): Rating {
   return x === "Low" || x === "Medium" || x === "High" ? x : fallback;
 }
@@ -206,9 +197,6 @@ function asExplanationProfile(x: any, fallback: ExplanationProfile): Explanation
     : fallback;
 }
 
-/* =========================
-   Explanation profile derivation (fallback if JSON missing it)
-   ========================= */
 function deriveProfile(t: any): ExplanationProfile {
   const explicit = asExplanationProfile(t.explanationProfile, "Other");
   if (t.explanationProfile) return explicit;
@@ -247,9 +235,6 @@ function deriveProfile(t: any): ExplanationProfile {
   return "Other";
 }
 
-/* =========================
-   Threat-aware simplified Why generator
-   ========================= */
 function buildWhy(
   profile: ExplanationProfile,
   ctx: any,
@@ -358,9 +343,6 @@ function buildWhy(
   return { summary, helpingFactors, remainingDrivers };
 }
 
-/* =========================
-   Main scorer
-   ========================= */
 export function scoreToolRiskAligned(ctx: any): ToolRiskScore {
   // ----------------------------
   // Context Probability (weights.json; PS-aligned) [1](https://notredamefcu-my.sharepoint.com/personal/dheady_notredamefcu_com/Documents/Scripts/ToolRiskWizard/Config/weights.json?web=1)
