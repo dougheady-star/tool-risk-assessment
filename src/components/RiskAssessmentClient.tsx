@@ -38,22 +38,8 @@ export default function RiskAssessmentClient() {
   const [assessedAt, setAssessedAt] = useState<string | null>(null);
   const [surveyKey, setSurveyKey] = useState(0);
 
-  const [legendOpen, setLegendOpen] = useState(false);
   const [openWhy, setOpenWhy] = useState<Record<number, boolean>>({});
-
-  function handlePrint() {
-    window.print();
-  }
-
-  function resetAll() {
-    setMode("survey");
-    setAnswers(null);
-    setResult(null);
-    setSurveyKey((k) => k + 1);
-    setOpenWhy({});
-    setLegendOpen(false);
-    setAssessedAt(null);
-  }
+  const [legendOpen, setLegendOpen] = useState(false);
 
   const model = useMemo(() => {
     const m = new Model(toolRiskSurvey as any);
@@ -84,22 +70,36 @@ export default function RiskAssessmentClient() {
 
   const assessedBy = answers?.AssessedBy || "—";
 
+  function resetAll() {
+    setMode("survey");
+    setAnswers(null);
+    setResult(null);
+    setSurveyKey((k) => k + 1);
+    setOpenWhy({});
+    setLegendOpen(false);
+    setAssessedAt(null);
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
+  const headerTitle =
+    mode === "results" && result ? toolName : "Tool / Application Risk Assessment";
+
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-8 py-8">
-          <div className="text-sm opacity-90">
-            Tool / Application Risk Assessment
+          <div className="text-xs opacity-90 uppercase tracking-wide">
+            Tool Risk Assessment Wizard
           </div>
 
           <div className="mt-1 flex flex-col gap-1">
             <div className="text-3xl font-semibold tracking-tight">
-              {mode === "results" && result
-                ? toolName
-                : "Start New Assessment"}
+              {headerTitle}
             </div>
-          
+
             {mode === "results" && result && (
               <div className="text-sm opacity-95">
                 Assessment Date: {assessedAt || "—"} · Assessed By: {assessedBy}
@@ -109,18 +109,15 @@ export default function RiskAssessmentClient() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-6">
-        {/* Survey */}
+      <div className="max-w-7xl mx-auto px-8 py-8">
         {mode === "survey" && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <Survey model={model} />
           </div>
         )}
 
-        {/* Results */}
         {mode === "results" && result && (
           <div id="print-area" className="space-y-5">
-            {/* Legend */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <button
                 type="button"
@@ -135,35 +132,37 @@ export default function RiskAssessmentClient() {
                 </div>
               </button>
 
-             <div
-                className={`mt-3 text-sm text-gray-700 space-y-2 ${
-                  legendOpen ? "" : "hidden print:block"
-                }`}
-              >
-                <div>
-                  <span className="font-semibold">Probability & Impact</span> –
-                  Likelihood and severity. Scale: Low (1) · Medium (2) · High (3)
-                </div>
-                <div>
-                  <span className="font-semibold">Inherent & Residual Risk</span>{" "}
-                  – Risk before and after controls. Scale: 1 (lowest) to 9
-                  (highest)
-                </div>
-                <div>
-                  <span className="font-semibold">Overall Risk Rating</span> –
-                  Low: &lt; 3.1 · Medium: 3.1–6.0 · High: ≥ 6.1
-                </div>
+              <div className="mt-3 text-sm text-gray-700 space-y-2">
+                {(legendOpen || true) && (
+                  <>
+                    <div>
+                      <span className="font-semibold">Probability & Impact</span>{" "}
+                      – Likelihood and severity. Scale: Low (1) · Medium (2) ·
+                      High (3)
+                    </div>
+                    <div>
+                      <span className="font-semibold">
+                        Inherent & Residual Risk
+                      </span>{" "}
+                      – Risk before and after controls. Scale: 1 (lowest) to 9
+                      (highest)
+                    </div>
+                    <div>
+                      <span className="font-semibold">Overall Risk Rating</span>{" "}
+                      – Low: &lt; 3.1 · Medium: 3.1–6.0 · High: ≥ 6.1
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
-            {/* Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="text-xs uppercase tracking-wider font-bold text-gray-500">
                   Overall Inherent Risk
                 </div>
                 <div className="mt-2 flex items-center gap-3">
-                  <div className="text-4xl font-bold text-gray-900">
+                  <div className="text-4xl font-semibold text-gray-900">
                     {result.OverallInherentRiskCalc}
                   </div>
                   <Badge level={result.OverallInherentRisk} />
@@ -175,7 +174,7 @@ export default function RiskAssessmentClient() {
                   Overall Residual Risk
                 </div>
                 <div className="mt-2 flex items-center gap-3">
-                  <div className="text-4xl font-bold text-gray-900">
+                  <div className="text-4xl font-semibold text-gray-900">
                     {result.OverallResidualRiskCalc}
                   </div>
                   <Badge level={result.OverallResidualRisk} />
@@ -183,7 +182,6 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
-            {/* Threat Table */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <div className="font-semibold text-gray-900 mb-3">
                 Threat Summary
@@ -191,16 +189,16 @@ export default function RiskAssessmentClient() {
 
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-sm table-fixed">
-                  {/* HARD COLUMN MODEL (helps screen + print consistency) */}
                   <colgroup>
-                    <col style={{ width: "22%" }} />
-                    <col style={{ width: "10%" }} />
-                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "24%" }} />
+                    <col style={{ width: "8%" }} />
+                    <col style={{ width: "8%" }} />
                     <col style={{ width: "12%" }} />
                     <col style={{ width: "14%" }} />
-                    <col style={{ width: "12%" }} />
+                    <col style={{ width: "14%" }} />
                     <col style={{ width: "20%" }} />
                   </colgroup>
+
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="border px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
@@ -226,34 +224,35 @@ export default function RiskAssessmentClient() {
                       </th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {result.Rows.map((r: ThreatRow, idx: number) => (
                       <React.Fragment key={`${r.Threat}-${idx}`}>
-                        <tr>
-                          <td className="border px-3 py-2 font-medium text-gray-900">
+                        <tr className="hover:bg-gray-50 transition">
+                          <td className="border px-3 py-1.5 font-medium text-gray-900">
                             {r.Threat}
                           </td>
 
-                          <td className="border px-3 py-2 whitespace-nowrap">
+                          <td className="border px-3 py-1.5 whitespace-nowrap">
                             {r.Probability}
                           </td>
 
-                          <td className="border px-3 py-2 whitespace-nowrap">
+                          <td className="border px-3 py-1.5 whitespace-nowrap">
                             {r.Impact}
                           </td>
 
-                          <td className="border px-3 py-2 whitespace-nowrap">
+                          <td className="border px-3 py-1.5 whitespace-nowrap">
                             <div className="flex items-center gap-2 whitespace-nowrap">
                               <span>{r.InherentRiskCalc}</span>
                               <Badge level={r.InherentRisk} />
                             </div>
                           </td>
 
-                          <td className="border px-3 py-2">
+                          <td className="border px-3 py-1.5">
                             {r.ControlRating}
                           </td>
 
-                          <td className="border px-3 py-2">
+                          <td className="border px-3 py-1.5 align-top">
                             <div className="flex flex-col items-start gap-1">
                               <div className="flex items-center gap-2 whitespace-nowrap">
                                 <span>{r.ResidualRiskCalc}</span>
@@ -276,10 +275,10 @@ export default function RiskAssessmentClient() {
                               )}
                             </div>
                           </td>
-                          <td className="border px-3 py-2">{r.Mitigation}</td>
+
+                          <td className="border px-3 py-1.5">{r.Mitigation}</td>
                         </tr>
 
-                        {/* Expandable Why Row (RESTORED) */}
                         {openWhy[idx] && r._why && (
                           <tr>
                             <td
@@ -329,7 +328,6 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="flex flex-wrap gap-3 pt-2 print-hide">
               <button
                 type="button"
