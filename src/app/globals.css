@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* ===============================
-BASE STYLES
-=============================== */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -28,9 +25,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ===============================
-SURVEYJS FIXES
-=============================== */
 .sd-root-modern svg,
 .sd-root-modern svg use {
   width: 1em !important;
@@ -52,10 +46,6 @@ SURVEYJS FIXES
 .sd-root-modern .sd-question__title {
   margin-bottom: 0.25rem;
 }
-
-/* ===============================
-PRINT (MAKE IT MATCH SCREEN)
-=============================== */
 
 /* Hard page margin control (removes the “mystery” top whitespace) */
 @page {
@@ -137,10 +127,6 @@ PRINT (MAKE IT MATCH SCREEN)
     padding: 10px 12px !important;
     margin: 0 !important;
   }
-
-  /* ===============================
-     TABLE: HARD LAYOUT (NO COLLISIONS)
-     =============================== */
 
   #print-area table {
     width: 100% !important;
