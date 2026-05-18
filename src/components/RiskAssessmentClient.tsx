@@ -93,33 +93,34 @@ export default function RiskAssessmentClient() {
             Tool / Application Risk Assessment
           </div>
 
-          {mode === "results" && result ? (
-            <div className="mt-1 flex flex-col gap-1">
-              <div className="text-3xl font-semibold tracking-tight">{toolName}</div>
+          <div className="mt-1 flex flex-col gap-1">
+            <div className="text-3xl font-semibold tracking-tight">
+              {mode === "results" && result
+                ? toolName
+                : "Start New Assessment"}
+            </div>
+          
+            {mode === "results" && result && (
               <div className="text-sm opacity-95">
                 Assessment Date: {assessedAt || "—"} · Assessed By: {assessedBy}
               </div>
-            </div>
-          ) : (
-            <div className="mt-1 text-2xl font-bold leading-tight">
-              Tool / Application Risk Assessment
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-6">
-        {/* Survey mode */}
+        {/* Survey */}
         {mode === "survey" && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <Survey model={model} />
           </div>
         )}
 
-        {/* Results mode */}
+        {/* Results */}
         {mode === "results" && result && (
           <div id="print-area" className="space-y-5">
-            {/* Collapsible Legend (RESTORED) */}
+            {/* Legend */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <button
                 type="button"
@@ -134,8 +135,7 @@ export default function RiskAssessmentClient() {
                 </div>
               </button>
 
-              {/* In print, always show the legend text (no button needed). */}
-              <div
+             <div
                 className={`mt-3 text-sm text-gray-700 space-y-2 ${
                   legendOpen ? "" : "hidden print:block"
                 }`}
@@ -156,7 +156,7 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
-            {/* Summary Cards */}
+            {/* Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="text-xs uppercase tracking-wider font-bold text-gray-500">
@@ -329,7 +329,7 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Buttons */}
             <div className="flex flex-wrap gap-3 pt-2 print-hide">
               <button
                 type="button"
