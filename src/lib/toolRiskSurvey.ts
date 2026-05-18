@@ -3,11 +3,8 @@ export const toolRiskSurvey = {
   description:
     "Assess inherent and residual risk associated with a software tool or application.",
 
-  // ✅ Hide SurveyJS header (we use page header)
   showTitle: false,
   showDescription: false,
-
-  // ✅ Progress bar that actually communicates progress
   showProgressBar: "top",
   progressBarType: "pages",
   showPageTitles: true,
@@ -164,11 +161,11 @@ export const toolRiskSurvey = {
         { type: "radiogroup", name: "CentralLogForwarding", title: "Central log forwarding enabled?", description: "Logs are forwarded to a centralized log or SIEM platform.", isRequired: true, choices: ["Yes", "No"] },
         { type: "radiogroup", name: "AuditLoggingEnabled", title: "Audit logging enabled?", description: "User and administrative actions are logged.", isRequired: true, choices: ["Yes", "No"] },
         { type: "radiogroup", name: "EncryptionInTransit", title: "Encryption in transit?", description: "Data is encrypted while transmitted over the network.", isRequired: true, choices: ["Yes", "No"] },
-        { type: "radiogroup", name: "RbacImplemented", title: "RBAC implemented?", description: "Access is restricted by defined roles.", isRequired: true, choices: ["Yes", "No"] },
+        { type: "radiogroup", name: "RbacImplemented", title: "Role-Based Authentication Controls implemented?", description: "Access is restricted by defined roles.", isRequired: true, choices: ["Yes", "No"] },
         { type: "radiogroup", name: "LeastPrivilegeEnforced", title: "Least privilege enforced?", description: "Users have only the access necessary to perform duties.", isRequired: true, choices: ["Yes", "No"] },
-        { type: "radiogroup", name: "SiemInPlace", title: "SIEM in place?", description: "Security logs are reviewed by a SIEM platform.", isRequired: true, choices: ["Yes", "No"] },
-        { type: "radiogroup", name: "Soc24x7Monitoring", title: "SOC (24x7 monitoring)?", description: "Security events are monitored continuously.", isRequired: true, choices: ["Yes", "No"] },
-        { type: "radiogroup", name: "AdminAccountsSeparated", title: "Admin accounts separated?", description: "Administrative accounts are separate from user accounts.", isRequired: true, choices: ["Yes", "No"] },
+        { type: "radiogroup", name: "SiemInPlace", title: "SIEM in place?", description: "Security logs are reviewed by a Security Information and Event Management platform.", isRequired: true, choices: ["Yes", "No"] },
+        { type: "radiogroup", name: "Soc24x7Monitoring", title: "SOC (24x7 monitoring)?", description: "Security events are monitored continuously by a security team.", isRequired: true, choices: ["Yes", "No"] },
+        { type: "radiogroup", name: "AdminAccountsSeparated", title: "Admin accounts separated?", description: "Administrator accounts are separate from their user accounts.", isRequired: true, choices: ["Yes", "No"] },
         { type: "radiogroup", name: "EncryptionAtRest", title: "Encryption at rest?", description: "Stored data is encrypted on disk.", isRequired: true, choices: ["Yes", "No"] },
         { type: "radiogroup", name: "BackupsEnabled", title: "Backups enabled?", description: "Backups are regularly performed and tested.", isRequired: true, choices: ["Yes", "No"] }
       ]
