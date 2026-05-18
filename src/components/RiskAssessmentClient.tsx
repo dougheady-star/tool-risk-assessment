@@ -85,10 +85,13 @@ export default function RiskAssessmentClient() {
   }
 
   const headerTitle =
-    mode === "results" && result ? toolName : "Tool / Application Risk Assessment";
+    mode === "results" && result
+      ? toolName
+      : "Tool / Application Risk Assessment";
 
   return (
     <div className="min-h-screen bg-gray-100">
+ 
       <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-8 py-8">
           <div className="text-xs opacity-90 uppercase tracking-wide">
@@ -110,14 +113,17 @@ export default function RiskAssessmentClient() {
       </div>
 
       <div className="max-w-7xl mx-auto px-8 py-8">
+        {/* Survey */}
         {mode === "survey" && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <Survey model={model} />
           </div>
         )}
 
+        {/* Results */}
         {mode === "results" && result && (
           <div id="print-area" className="space-y-5">
+            {/* Legend */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <button
                 type="button"
@@ -132,30 +138,31 @@ export default function RiskAssessmentClient() {
                 </div>
               </button>
 
-              <div className="mt-3 text-sm text-gray-700 space-y-2">
-                {(legendOpen || true) && (
-                  <>
-                    <div>
-                      <span className="font-semibold">Probability & Impact</span>{" "}
-                      – Likelihood and severity. Scale: Low (1) · Medium (2) ·
-                      High (3)
-                    </div>
-                    <div>
-                      <span className="font-semibold">
-                        Inherent & Residual Risk
-                      </span>{" "}
-                      – Risk before and after controls. Scale: 1 (lowest) to 9
-                      (highest)
-                    </div>
-                    <div>
-                      <span className="font-semibold">Overall Risk Rating</span>{" "}
-                      – Low: &lt; 3.1 · Medium: 3.1–6.0 · High: ≥ 6.1
-                    </div>
-                  </>
-                )}
+               <div
+                className={`mt-3 text-sm text-gray-700 space-y-2 ${
+                  legendOpen ? "" : "hidden print:block"
+                }`}
+              >
+                <div>
+                  <span className="font-semibold">Probability &amp; Impact</span>{" "}
+                  – Likelihood and severity. Scale: Low (1) · Medium (2) · High
+                  (3)
+                </div>
+                <div>
+                  <span className="font-semibold">
+                    Inherent &amp; Residual Risk
+                  </span>{" "}
+                  – Risk before and after controls. Scale: 1 (lowest) to 9
+                  (highest)
+                </div>
+                <div>
+                  <span className="font-semibold">Overall Risk Rating</span> – Low:
+                  &lt; 3.1 · Medium: 3.1–6.0 · High: ≥ 6.1
+                </div>
               </div>
             </div>
 
+            {/* Summary */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="text-xs uppercase tracking-wider font-bold text-gray-500">
@@ -182,6 +189,7 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
+            {/* Threats */}
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <div className="font-semibold text-gray-900 mb-3">
                 Threat Summary
@@ -328,6 +336,7 @@ export default function RiskAssessmentClient() {
               </div>
             </div>
 
+            {/* Actions */}
             <div className="flex flex-wrap gap-3 pt-2 print-hide">
               <button
                 type="button"
